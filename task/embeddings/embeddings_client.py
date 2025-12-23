@@ -45,9 +45,8 @@ class DialEmbeddingsClient:
         }
 
         request_data = {
-            # TODO:
-            #  Add `input` and `dimensions` parameters.
-            #  Details: https://dialx.ai/dial_api#operation/sendEmbeddingsRequest
+            "input": inputs,
+            "dimensions": dimensions
         }
 
         response = requests.post(
@@ -58,29 +57,13 @@ class DialEmbeddingsClient:
         )
 
         if response.status_code == 200:
-            # TODO: Get response:
-            #  Response JSON:
-            #  {
-            #     "data": [
-            #         {
-            #             "embedding": [
-            #                 0.19686688482761383,
-            #                 ...
-            #             ],
-            #             "index": 0,
-            #             "object": "embedding"
-            #         }
-            #     ],
-            #     ...
-            #  }
-
-            response_json = None # TODO: Parse to json (response.json())
-            data = None # TODO: Get `data`
+            response_json = response.json()
+            data = response_json["data"]
             if print_response:
                 print("\n" + "=" * 50 + " RESPONSE " + "=" * 50)
                 print(json.dumps(response_json, indent=2))
                 print("=" * 108)
-            return None # TODO: Return self._from_data(data)
+            return self._from_data(data)
         raise Exception(f"HTTP {response.status_code}: {response.text}")
 
     def _from_data(self, data: list[dict]) -> dict[int, list[float]]:
